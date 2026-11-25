@@ -62,7 +62,12 @@ function Start-ManagedApp {
         return
     }
     try {
-        Start-Process -FilePath $exe -WindowStyle Hidden -ErrorAction Stop
+        if ($base -eq 'glazewm') {
+            Start-Process -FilePath $exe -ArgumentList 'start' -WindowStyle Hidden -ErrorAction Stop
+        }
+        else {
+            Start-Process -FilePath $exe -WindowStyle Hidden -ErrorAction Stop
+        }
         Write-Log "Started $base ($exe)."
     }
     catch {
