@@ -1,25 +1,30 @@
 #requires -Version 5.1
 <#
-    uninstall.ps1
-    Stops ricing processes, removes startup hotkey daemon, and restores pre-rice backups.
+    uninstall.ps1 - Cleanly reverts win11-rice and restores backed-up Windows settings.
 #>
 [CmdletBinding()]
 param()
 
 $ErrorActionPreference = 'Stop'
+$ScriptsDir = 'C:\Scripts'
+$ResetScript = Join-Path $ScriptsDir 'Reset-Default.ps1'
+
+Write-Host '=== win11-rice uninstaller ===' -ForegroundColor Cyan
 
 Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" -ErrorAction SilentlyContinue |
-    Where-Object { $_.CommandLine -like '*HotkeyDaemon.ps1*' -and $_.ProcessId -ne $PID } |
+    Where-Object { $_.CommandLine -match 'HotkeyDaemon\.ps1' } |
     ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
 
-$startupLnk = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Startup\RicingHotkeyDaemon.lnk'
-if (Test-Path -LiteralPath $startupLnk) { Remove-Item -LiteralPath $startupLnk -Force }
-
-$modesDir = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Modes'
-if (Test-Path -LiteralPath $modesDir) { Remove-Item -LiteralPath $modesDir -Recurse -Force }
-
-if (Test-Path -LiteralPath 'C:\Scripts\Reset-Default.ps1') {
-    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File 'C:\Scripts\Reset-Default.ps1'
+$lnkPath = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Startup\RicingHotkeyDaemon.lnk'
+if (Test-Path -LiteralPath $lnkPath) {
+    Remove-Item -LiteralPath $lnkPath -Force
 }
 
-Write-Host 'win11-rice uninstalled and pre-rice defaults restored.' -ForegroundColor Green
+if (Test-Path -LiteralPath $ResetScript) {
+    & $ResetScript
+}
+else {
+    Write-Warning "Reset script not found at $ResetScript."
+}
+
+Write-Host 'win11-rice uninstalled and Windows defaults restored.' -ForegroundColor Green

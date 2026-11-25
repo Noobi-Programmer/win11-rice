@@ -194,3 +194,40 @@ function Set-CleanTaskbarElements {
     }
     Set-ItemProperty -Path $langPath -Name 'ShowStatus' -Value 3 -Type DWord -ErrorAction SilentlyContinue
 }
+
+function Set-CleanSystemUI {
+    [CmdletBinding()]
+    param()
+    Set-CleanTaskbarElements
+}
+
+function Optimize-ActiveWindowFullscreen {
+    [CmdletBinding()]
+    param()
+
+    if (-not ('Win32WindowFocus' -as [type])) {
+        Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+
+public static class Win32WindowFocus
+{
+    public const int SW_MAXIMIZE = 3;
+
+    [DllImport("user32.dll")]
+    public static extern IntPtr GetForegroundWindow();
+
+    [DllImport("user32.dll")]
+    public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    [DllImport("user32.dll")]
+    public static extern bool IsZoomed(IntPtr hWnd);
+}
+'@
+    }
+
+    $fg = [Win32WindowFocus]::GetForegroundWindow()
+    if ($fg -ne [IntPtr]::Zero -and -not [Win32WindowFocus]::IsZoomed($fg)) {
+        [void][Win32WindowFocus]::ShowWindow($fg, [Win32WindowFocus]::SW_MAXIMIZE)
+    }
+}

@@ -1,49 +1,68 @@
 # win11-rice
 
-Ultra-lightweight, reproducible Windows 11 desktop rice & multi-mode workspace switcher (Catppuccin Mocha / Shibumi Minimal aesthetic) built for laptops and creator workstations.
+An ultra-lightweight, hyper-efficient Windows 11 desktop rice, 4-mode power/UI switcher, and offline **UltraSaver** cinema mode built on native Windows Virtual Desktops, Precision Touchpad gestures, **Flow Launcher**, **Everything**, **Lively Wallpaper**, **Rainmeter**, and **Windhawk**.
 
-## Features
+## Architecture
 
-- **Shibumi Minimal YASB Top Bar**: Translucent floating 30px bar (`JetBrainsMono NFP`, borderless Catppuccin Mocha pills, GlazeWM workspaces, inline media controls, clock + calendar, mode pill, CPU/RAM/volume/Wi-Fi/battery).
-- **4-Mode + Bar-Style Switcher (`Switch-Mode.ps1`)**: Instant Win32 P/Invoke taskbar & desktop icon toggling (`ShowWindow`, `SHAppBarMessage`, `WM_SETTINGCHANGE`) without killing `explorer.exe`.
-- **GlazeWM Tiling + Conflict-Free Hotkeys**: `Alt+Shift+1..4` and `Alt+Shift+0` (zero collision with hardware `Ctrl+Alt+N` shortcuts), plus a hidden Win32 `HotkeyDaemon.ps1` fallback when GlazeWM is stopped.
-- **Windhawk Floating Hover Dock**: `DockLike` taskbar styler + translucent Start Menu & Notification Center for `hybrid` and `studio` modes.
-- **Rainmeter `StudioMinimal` Widgets**: Lightweight (~10 MB RAM) desktop aesthetic clock and compact `280x68` mini media player.
-
-## Screenshots
-
-> _Add screenshots of `linux` (YASB top bar) and `hybrid` (Windhawk hover dock + Rainmeter widgets) modes here._
-
-## Hotkey Cheatsheet
-
-| Hotkey | Action |
-|---|---|
-| `Alt + Shift + 1` | **Linux Mode** — GlazeWM tiling ON, Shibumi YASB top bar, bottom taskbar hidden, Rainmeter widgets ON |
-| `Alt + Shift + 2` | **Hybrid Mode** — GlazeWM tiling ON, YASB OFF, Windhawk floating hover bottom dock, Rainmeter widgets ON |
-| `Alt + Shift + 3` | **Studio Mode** — GlazeWM OFF (free-floating for DaVinci Resolve / Blender / games), hover bottom dock, full AC power |
-| `Alt + Shift + 4` | **HyperSaver Mode** — GlazeWM + YASB, Rainmeter paused, Windows Power Saver + 70% DC CPU cap |
-| `Alt + Shift + 0` | **Reset Default** — Stops ricing apps, restores registry backups & stock Windows taskbar/icons |
-| `Alt + Space` | **Flow Launcher** (backed by Everything search) |
-| `Alt + Enter` | Open Windows Terminal |
-| `Alt + H/J/K/L` | Focus window left/down/up/right (GlazeWM) |
-| `Alt + 1..9` | Switch workspace `1..9` (GlazeWM) |
-
-## One-Command Install
-
-Run in an **elevated PowerShell** terminal:
-
-```powershell
-irm https://raw.githubusercontent.com/<your-username>/win11-rice/main/install.ps1 | iex
+```text
+  ┌─────────────────────────────────────────────────────────────────────┐
+  │                   Alt + Shift + 0..4 / Flow Launcher                │
+  └──────────┬──────────────┬──────────────┬──────────────┬─────────────┘
+             ▼              ▼              ▼              ▼
+      [1] LINUX        [2] HYBRID     [3] STUDIO     [4] SAVER
+   Pure Fullscreen   Hover Dock +     AC Creative/   Offline Cinema
+   Workspaces        Workspaces       Gaming         (UltraSaver)
+   • Taskbar: OFF    • Dock: Auto     • Dock: Auto   • WiFi/BT: OFF
+   • Icons: OFF      • Icons: OFF     • Lively: Paused• Rainmeter/Lively: OFF
+   • Lively: ON      • Rainmeter: ON  • dGPU: Auto   • CPU DC Cap: 50%
+   • CPU: 100%       • CPU: 100%      • CPU: 100%    • PotPlayer + LLT HyperSaver
 ```
 
-Or locally from a cloned repo:
+## Touchpad Gestures & Hotkeys
+
+| Input | Action |
+| :--- | :--- |
+| **3-Finger Swipe Left / Right** | Switch Windows Virtual Desktops |
+| **4-Finger Swipe Up / Down** | Multitasking / Task View overview |
+| `Alt + Space` | Open **Flow Launcher** (with **Everything** file search) |
+| `Alt + Shift + 1` | **Linux** mode (edge-to-edge fullscreen workspaces, no taskbar) |
+| `Alt + Shift + 2` | **Hybrid** mode (workspaces + Windhawk floating hover dock) |
+| `Alt + Shift + 3` | **Studio** mode (pauses Lively, frees GPU/VRAM for Resolve/Blender/gaming) |
+| `Alt + Shift + 4` | **Saver** mode (offline UltraSaver cinema: WiFi/BT off, 50% DC CPU, PotPlayer) |
+| `Alt + Shift + 0` | **Reset** to stock Windows 11 defaults (restores `.reg` backups & radios) |
+
+## One-Line Install
+
+Run in **PowerShell** (run as Administrator for system-wide `JetBrainsMono` Nerd Font registration and Windhawk `HKLM` settings):
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1
+git clone https://github.com/Noobi-Programmer/win11-rice.git "$env:USERPROFILE\win11-rice" ; & "$env:USERPROFILE\win11-rice\install.ps1"
 ```
 
-## Uninstall / Revert
+To revert all changes and restore your backed-up Windows settings:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\uninstall.ps1
+& "$env:USERPROFILE\win11-rice\uninstall.ps1"
+```
+
+## Repository Layout
+
+```text
+win11-rice/
+├── install.ps1
+├── uninstall.ps1
+├── README.md
+├── configs/
+│   ├── rainmeter/StudioMinimal/
+│   │   ├── AestheticClock/Clock.ini
+│   │   └── MiniPlayer/Player.ini
+│   └── windhawk/taskbar-dock.json
+└── scripts/
+    ├── Switch-Mode.ps1
+    ├── UltraSaver.ps1
+    ├── RestoreRadios.ps1
+    ├── DesktopHelpers.ps1
+    ├── Reset-Default.ps1
+    ├── HotkeyDaemon.ps1
+    └── Apply-Windhawk.ps1
 ```
