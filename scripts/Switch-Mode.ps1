@@ -1,4 +1,4 @@
-#requires -Version 5.1
+﻿#requires -Version 5.1
 <#
     Switch-Mode.ps1 - Unified 4-mode & visual-style switcher.
     Modes: linux | hybrid | studio | saver | reset
@@ -25,7 +25,7 @@ $PowerSaver = 'a1841308-3541-4fab-bc81-f71556f20b4a'
 . (Join-Path $Scripts 'DesktopHelpers.ps1')
 
 $PreferredApps = @{
-    'glazewm'   = 'C:\Users\abini\Apps\GlazeWM\PFiles64\glzr.io\GlazeWM\cli\glazewm.exe'
+    'glazewm'   = 'C:\Program Files\glzr.io\GlazeWM\glazewm.exe'
     'yasb'      = 'C:\Program Files\YASB\yasb.exe'
     'Rainmeter' = 'C:\Users\abini\Apps\Rainmeter\Rainmeter.exe'
 }
