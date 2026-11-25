@@ -1,0 +1,23 @@
+{
+  "theme": "DockLike",
+  "controlStyles": [
+    {
+      "target": "Taskbar.TaskbarFrame#TaskbarFrame",
+      "styles": [
+        "CornerRadius=12",
+        "Margin=0,0,0,6",
+        "Background:=#CC11111B",
+        "BorderBrush:=#22FFFFFF",
+        "BorderThickness=1"
+      ]
+    }
+  ],
+  "relatedMods": {
+    "windows-11-start-menu-styler": {
+      "theme": "TranslucentStartMenu"
+    },
+    "windows-11-notification-center-styler": {
+      "theme": "Translucent"
+    }
+  }
+}
